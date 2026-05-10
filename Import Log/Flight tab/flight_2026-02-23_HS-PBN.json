@@ -1,0 +1,54 @@
+{
+  "date": "2026-02-23",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "KB",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "8dbc3348-2113-4ddb-b4d4-6244f07c3cfe",
+      "dep": "VTBD",
+      "arr": "VTSG",
+      "start": "0910",
+      "off": "0930",
+      "on": "1110",
+      "stop": "1115",
+      "pf": "",
+      "pm": "",
+      "dual": "",
+      "ip": "",
+      "condition": "N/O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0205",
+      "nightTime": "",
+      "remarks": "FLTCK IFP VTSG",
+      "isIfp": true
+    },
+    {
+      "id": "a949244d-e101-4076-87ca-7b76d3346dbc",
+      "dep": "VTSG",
+      "arr": "VTSG",
+      "start": "1400",
+      "off": "1420",
+      "on": "1725",
+      "stop": "1735",
+      "pf": "PT",
+      "pm": "KB",
+      "dual": "",
+      "ip": "",
+      "condition": "N/O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0335",
+      "nightTime": "",
+      "remarks": "FLTCK IFP VTSP VTSG",
+      "isIfp": true
+    }
+  ]
+}

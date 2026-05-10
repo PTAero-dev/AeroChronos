@@ -1,0 +1,53 @@
+{
+  "date": "2026-05-01",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "KK",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "62d09b56-9f28-4933-ad6a-6c4dd604ab4a",
+      "dep": "VNSI",
+      "arr": "VNSI",
+      "start": "0800",
+      "off": "0830",
+      "on": "1030",
+      "stop": "1045",
+      "pf": "PT",
+      "pm": "KK",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0245",
+      "nightTime": "",
+      "remarks": "FLTCK DVOR/DME SMR"
+    },
+    {
+      "id": "86ee192a-4548-4c6d-8eaf-7cbc23cff124",
+      "dep": "VNSI",
+      "arr": "VNSI",
+      "start": "1500",
+      "off": "1510",
+      "on": "1640",
+      "stop": "1645",
+      "pf": "KK",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0145",
+      "nightTime": "",
+      "remarks": "FLTCK IFP VNSI",
+      "isIfp": true
+    }
+  ]
+}

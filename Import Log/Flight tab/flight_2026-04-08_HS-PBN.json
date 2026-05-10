@@ -1,0 +1,72 @@
+{
+  "date": "2026-04-08",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "RR",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "efda5940-0c2d-4ae9-a086-7f2288c1ce3b",
+      "dep": "VTUK",
+      "arr": "VTUV",
+      "start": "0940",
+      "off": "0950",
+      "on": "1015",
+      "stop": "1020",
+      "pf": "RR",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:40",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    },
+    {
+      "id": "930df309-519a-4fbd-aaa4-e4dbd526b3e3",
+      "dep": "VTUV",
+      "arr": "VTUV",
+      "start": "1410",
+      "off": "1430",
+      "on": "1700",
+      "stop": "1705",
+      "pf": "RR",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0255",
+      "nightTime": "",
+      "remarks": "FLTCK ILS RWY36 VTUV"
+    },
+    {
+      "id": "f0bc56f5-dd92-45a7-9f64-d0669965b1df",
+      "dep": "VTUV",
+      "arr": "VTUK",
+      "start": "1800",
+      "off": "1805",
+      "on": "1835",
+      "stop": "1845",
+      "pf": "RR",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": true,
+      "ifrTime": "0:45",
+      "vfrTime": "",
+      "nightTime": "0045",
+      "remarks": ""
+    }
+  ]
+}

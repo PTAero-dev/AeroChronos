@@ -1,0 +1,32 @@
+{
+  "date": "2026-02-14",
+  "ac": "HS-DCF",
+  "crew": [
+    "PT",
+    "PK",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "b12cd431-3db8-474c-9034-24725e900419",
+      "dep": "VTBD",
+      "arr": "VTBD",
+      "start": "0645",
+      "off": "0715",
+      "on": "0745",
+      "stop": "0755",
+      "pf": "PT",
+      "pm": "PK",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:10",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": "R. BL Air fail, RTB VTBD"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "date": "2026-02-24",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "KB",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "abd53b0f-23eb-44fd-9735-abbbda6db0cb",
+      "dep": "VTSG",
+      "arr": "VTSG",
+      "start": "1240",
+      "off": "1255",
+      "on": "1605",
+      "stop": "1610",
+      "pf": "KB",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N/O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0330",
+      "nightTime": "",
+      "remarks": "FLTCK IFP VTSP VTSG",
+      "isIfp": true
+    }
+  ]
+}

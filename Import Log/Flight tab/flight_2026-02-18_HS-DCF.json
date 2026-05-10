@@ -1,0 +1,32 @@
+{
+  "date": "2026-02-18",
+  "ac": "HS-DCF",
+  "crew": [
+    "AP",
+    "PT",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "9c423092-00dc-4886-8db0-ec23d924c20b",
+      "dep": "VTSG",
+      "arr": "VTSG",
+      "start": "1005",
+      "off": "1025",
+      "on": "1255",
+      "stop": "1305",
+      "pf": "AP",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "3:00",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": "FLTCK PAPI RWY14/32 VTSG"
+    }
+  ]
+}

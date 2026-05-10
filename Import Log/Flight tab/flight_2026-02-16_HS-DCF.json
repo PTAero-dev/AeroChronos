@@ -1,0 +1,52 @@
+{
+  "date": "2026-02-16",
+  "ac": "HS-DCF",
+  "crew": [
+    "AP",
+    "PT",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "ff649aa9-68ce-421d-b0b8-40d58227ccb2",
+      "dep": "VTBD",
+      "arr": "VTSE",
+      "start": "0925",
+      "off": "1025",
+      "on": "1135",
+      "stop": "1140",
+      "pf": "AP",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "2:15",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    },
+    {
+      "id": "7e48bd9b-6003-49fd-9def-fc8b0fb8cef3",
+      "dep": "VTSE",
+      "arr": "VTSE",
+      "start": "1420",
+      "off": "1430",
+      "on": "1555",
+      "stop": "1600",
+      "pf": "AP",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0140",
+      "nightTime": "",
+      "remarks": "FLTCK PAPI 06/24 VTSE"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "date": "2026-02-11",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "ND",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "fd86cc78-422a-410c-bfea-2ba56e76b59c",
+      "dep": "VTBD",
+      "arr": "VTPP",
+      "start": "0900",
+      "off": "0940",
+      "on": "1050",
+      "stop": "1100",
+      "pf": "PT",
+      "pm": "ND",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 2,
+      "isNight": false,
+      "ifrTime": "2:00",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": "Test Flight HSPBN"
+    },
+    {
+      "id": "4564c0cc-461d-46bc-bc4d-e1587926b6a7",
+      "dep": "VTPP",
+      "arr": "VTBD",
+      "start": "1420",
+      "off": "1440",
+      "on": "1535",
+      "stop": "1545",
+      "pf": "PT",
+      "pm": "ND",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:25",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": "Test Flight HSPBN"
+    }
+  ]
+}

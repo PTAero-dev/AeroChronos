@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Copy-Item \"d:\\\\Antigravity.Projects\\\\AeroChronos\\\\src\\\\App.tsx\" \"d:\\\\Antigravity.Projects\\\\AeroChronos\\\\src\\\\App.local.tsx\")",
+      "PowerShell(Get-ChildItem -Path \"d:\\\\Antigravity.Projects\\\\AeroChronos\" -Depth 2 | Where-Object { $_.PSIsContainer -eq $false } | Select-Object -First 50 FullName)"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "date": "2026-03-19",
+  "ac": "HS-ATS",
+  "crew": [
+    "PT",
+    "JP",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "b1bda36e-649a-4e71-8bc5-c5185588dca7",
+      "dep": "VTCL",
+      "arr": "VTBD",
+      "start": "1400",
+      "off": "1415",
+      "on": "1535",
+      "stop": "1540",
+      "pf": "JP",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:40",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

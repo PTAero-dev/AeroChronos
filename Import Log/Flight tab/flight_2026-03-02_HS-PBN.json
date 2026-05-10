@@ -1,0 +1,32 @@
+{
+  "date": "2026-03-02",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "RR",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "e29765e0-3551-4355-a5b9-5c9d3713a692",
+      "dep": "VTBD",
+      "arr": "VTBD",
+      "start": "0535",
+      "off": "0555",
+      "on": "0845",
+      "stop": "0855",
+      "pf": "PT",
+      "pm": "RR",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0320",
+      "nightTime": "",
+      "remarks": "FLTCK ILS RWY03L VTBD"
+    }
+  ]
+}

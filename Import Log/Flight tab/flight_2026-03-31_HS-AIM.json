@@ -1,0 +1,32 @@
+{
+  "date": "2026-03-31",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "KS",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "cd3ca697-f7be-4e49-b689-d587d1f0607a",
+      "dep": "VTUN",
+      "arr": "VTUN",
+      "start": "1600",
+      "off": "1615",
+      "on": "1820",
+      "stop": "1830",
+      "pf": "PT",
+      "pm": "KS",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0230",
+      "nightTime": "",
+      "remarks": "FLTCK PAPI RWY06 VTUN"
+    }
+  ]
+}

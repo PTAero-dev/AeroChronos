@@ -1,0 +1,32 @@
+{
+  "date": "2026-04-02",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "KS",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "3551b9f7-e873-4eda-a3d3-baf1a7efcb01",
+      "dep": "VTUN",
+      "arr": "VTUN",
+      "start": "1545",
+      "off": "1605",
+      "on": "1755",
+      "stop": "1800",
+      "pf": "PT",
+      "pm": "KS",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0215",
+      "nightTime": "",
+      "remarks": "FLTCK ILS RWY24 VTUN"
+    }
+  ]
+}

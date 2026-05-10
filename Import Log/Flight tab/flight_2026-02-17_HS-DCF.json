@@ -1,0 +1,32 @@
+{
+  "date": "2026-02-17",
+  "ac": "HS-DCF",
+  "crew": [
+    "AP",
+    "PT",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "46689743-a5d4-4e11-bf8b-35a131c97c98",
+      "dep": "VTSE",
+      "arr": "VTSG",
+      "start": "1110",
+      "off": "1130",
+      "on": "1225",
+      "stop": "1235",
+      "pf": "PT",
+      "pm": "AP",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:25",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

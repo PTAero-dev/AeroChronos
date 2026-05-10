@@ -1,0 +1,52 @@
+{
+  "date": "2026-03-30",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "KS",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "40cb110a-98d5-41e4-964a-09f80d51196a",
+      "dep": "VTBD",
+      "arr": "VTUN",
+      "start": "1020",
+      "off": "1040",
+      "on": "1130",
+      "stop": "1140",
+      "pf": "PT",
+      "pm": "KS",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:20",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    },
+    {
+      "id": "671418a4-a3f0-4b95-964f-42f34c4cbc5f",
+      "dep": "VTUN",
+      "arr": "VTUN",
+      "start": "1535",
+      "off": "1550",
+      "on": "1720",
+      "stop": "1730",
+      "pf": "PT",
+      "pm": "KS",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0155",
+      "nightTime": "",
+      "remarks": "FLTCK PAPI RWY24 VTUN"
+    }
+  ]
+}

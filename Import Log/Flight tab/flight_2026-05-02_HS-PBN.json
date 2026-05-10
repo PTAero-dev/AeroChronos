@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-02",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "KK",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "31cf34bd-01c1-4190-8953-f9b027b4b3ae",
+      "dep": "VNSI",
+      "arr": "VNKT",
+      "start": "1000",
+      "off": "1010",
+      "on": "1050",
+      "stop": "1105",
+      "pf": "KK",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:05",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

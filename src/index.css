@@ -1,0 +1,220 @@
+:root {
+  /* Modern Dark Theme - Deep Blue/Slate */
+  --bg-gradient-start: #0f172a;
+  --bg-gradient-end: #020617;
+
+  /* Glassmorphism Cards */
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+  /* Text */
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-highlight: #38bdf8;
+  --accent-cyan: #38bdf8;
+
+  /* Inputs */
+  --input-bg: rgba(15, 23, 42, 0.6);
+  --input-border: rgba(148, 163, 184, 0.2);
+  --input-focus: #38bdf8;
+
+  /* Semantic Colors (Softer, Modern) */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-info: #38bdf8;
+  --color-danger: #ef4444;
+
+  /* Typography */
+  --digital-font: 'JetBrains Mono', 'Courier New', monospace;
+  /* Modern coding font feel */
+
+  /* Mobile Ergonomics */
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --touch-target: 44px;
+  /* Minimum touch target */
+
+  /* Prevent zoom on mobile inputs */
+  touch-action: manipulation;
+
+  /* Force Browser Dark Mode Defaults */
+  color-scheme: dark;
+
+  /* Helper for gradients */
+  --btn-gradient: linear-gradient(135deg, var(--color-info), #0ea5e9);
+}
+
+/* Ensure glass-input exists if referenced, or plain inputs work */
+.glass-input {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+html {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Rich gradient background */
+  background: linear-gradient(to bottom right, var(--bg-gradient-start), var(--bg-gradient-end));
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 80px;
+  /* Space for footer/actions */
+}
+
+/* Base Inputs */
+input,
+select {
+  width: 100%;
+  height: var(--touch-target);
+  /* Large touch targets */
+  background: #020617;
+  /* Solid dark background */
+  background-color: #020617;
+  border: 1px solid var(--input-border);
+  color: #ffffff;
+  /* Pure white text */
+  padding: 0 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--input-focus);
+  background: rgba(56, 189, 248, 0.1);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Card Style - Glassmorphism */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+  position: relative;
+  /* Left border accent removed in favor of subtle border or internal pills */
+}
+
+/* Layout Utilities */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.btn {
+  height: 48px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  width: 100%;
+  background: var(--btn-gradient);
+  color: white;
+  border-radius: var(--radius-lg);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+  transition: transform 0.1s;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Status Pills (for conditions) */
+.pill-btn {
+  padding: 8px;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: bold;
+  opacity: 0.6;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.pill-btn.active {
+  opacity: 1;
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pill-n {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.pill-n.active {
+  background: #10b981;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.pill-o {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.pill-o.active {
+  background: #f59e0b;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.pill-no {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
+
+.pill-no.active {
+  background: #38bdf8;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}

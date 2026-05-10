@@ -1,0 +1,32 @@
+{
+  "date": "2026-02-15",
+  "ac": "HS-ATS",
+  "crew": [
+    "PT",
+    "ND",
+    "PK",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "52203213-e3d9-4f9a-9219-357a94a3734d",
+      "dep": "VTSS",
+      "arr": "VTBD",
+      "start": "1245",
+      "off": "1305",
+      "on": "1515",
+      "stop": "1525",
+      "pf": "ND",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "2:40",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

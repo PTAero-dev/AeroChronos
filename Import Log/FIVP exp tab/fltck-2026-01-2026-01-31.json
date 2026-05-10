@@ -1,0 +1,60 @@
+{
+  "exportDate": "2026-01-31T13:48:41.678Z",
+  "exportPeriod": "monthly",
+  "periodLabel": "2026-01",
+  "fltckExperience": {
+    "prevHours": 0,
+    "prevHoursDate": "",
+    "prevHoursLocked": false,
+    "navaidRecords": [
+      {
+        "id": "navaid-1769867267531",
+        "date": "2026-01-13",
+        "type": "VOR",
+        "station": "SMU",
+        "remarks": ""
+      },
+      {
+        "id": "navaid-1769867306077",
+        "date": "2026-01-13",
+        "type": "ILS",
+        "station": "ISTN",
+        "remarks": ""
+      },
+      {
+        "id": "navaid-1769867248701",
+        "date": "2026-01-12",
+        "type": "NDB",
+        "station": "RN",
+        "remarks": ""
+      },
+      {
+        "id": "navaid-1769867260015",
+        "date": "2026-01-12",
+        "type": "VOR",
+        "station": "RAN",
+        "remarks": ""
+      }
+    ],
+    "navaidRequirements": {
+      "NDB": 2,
+      "VOR": 2,
+      "ILS": 2,
+      "RADAR": 2,
+      "PAPI": 2
+    },
+    "navaidStartDate": "2025-08-01",
+    "navaidStartDateLocked": true,
+    "ifpRecords": [],
+    "ifpStartDate": "2025-08-01",
+    "ifpStartDateLocked": true,
+    "ifpRequirements": {
+      "APP": 1,
+      "SID": 1,
+      "STAR": 1
+    },
+    "prevIfpHours": 0,
+    "prevIfpHoursDate": "",
+    "prevIfpHoursLocked": false
+  }
+}

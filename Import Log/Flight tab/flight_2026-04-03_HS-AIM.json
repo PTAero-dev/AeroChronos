@@ -1,0 +1,32 @@
+{
+  "date": "2026-04-03",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "KS",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "0998808b-984c-4cdb-acb9-98171ce6e55b",
+      "dep": "VTUN",
+      "arr": "VTBD",
+      "start": "1045",
+      "off": "1105",
+      "on": "1145",
+      "stop": "1150",
+      "pf": "PT",
+      "pm": "KS",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:05",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

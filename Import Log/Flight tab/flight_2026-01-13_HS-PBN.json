@@ -1,0 +1,48 @@
+{
+  "date": "2026-01-13",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "KB",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "1bd36ba7-69e2-4241-ba20-0cf7006e1bb1",
+      "dep": "VTSB",
+      "arr": "VTSB",
+      "start": "0935",
+      "off": "0955",
+      "on": "1210",
+      "stop": "1220",
+      "pf": "PT",
+      "pm": "KB",
+      "condition": "N/O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0245",
+      "nightTime": "",
+      "remarks": "FLTCK DVOR/DME SMU"
+    },
+    {
+      "id": "c1505813-a49d-4490-9e24-8fd8ea9c2aeb",
+      "dep": "VTSB",
+      "arr": "VTSB",
+      "start": "1510",
+      "off": "1530",
+      "on": "1755",
+      "stop": "1800",
+      "pf": "PT",
+      "pm": "KB",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0250",
+      "nightTime": "",
+      "remarks": "FLTCK ILS/DME VTSB"
+    }
+  ]
+}

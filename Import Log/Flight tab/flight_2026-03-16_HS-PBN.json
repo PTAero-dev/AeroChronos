@@ -1,0 +1,52 @@
+{
+  "date": "2026-03-16",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "JP",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "fb2cfd6f-233d-4c6f-95b2-31435bb2c6c6",
+      "dep": "VTBD",
+      "arr": "VTCL",
+      "start": "0905",
+      "off": "0950",
+      "on": "1105",
+      "stop": "1110",
+      "pf": "JP",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "2:05",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    },
+    {
+      "id": "36368d59-0a87-42d5-81a1-a4f36b98328f",
+      "dep": "VTCL",
+      "arr": "VTCL",
+      "start": "1345",
+      "off": "1400",
+      "on": "1605",
+      "stop": "1610",
+      "pf": "PT",
+      "pm": "JP",
+      "dual": "",
+      "ip": "",
+      "condition": "N/O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0225",
+      "nightTime": "",
+      "remarks": "FLTCK NDB VOR VTCH"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "date": "2026-01-14",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "KB",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "46dc8a54-86c8-40b3-be07-fe28f23a516f",
+      "dep": "VTSB",
+      "arr": "VTSB",
+      "start": "1335",
+      "off": "1400",
+      "on": "1535",
+      "stop": "1545",
+      "pf": "PT",
+      "pm": "KB",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0210",
+      "nightTime": "",
+      "remarks": "FLTCK ILS/DME VTSB"
+    }
+  ]
+}

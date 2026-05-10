@@ -1,0 +1,52 @@
+{
+  "date": "2026-03-24",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "KB",
+    "PK",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "10dedf19-2053-4ce2-b40b-5b05145d4b6d",
+      "dep": "VTSP",
+      "arr": "VTSP",
+      "start": "0645",
+      "off": "0710",
+      "on": "0855",
+      "stop": "0910",
+      "pf": "PT",
+      "pm": "KB",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0225",
+      "nightTime": "",
+      "remarks": "FLTCK LOC/DME VTSP"
+    },
+    {
+      "id": "d0c5e924-8b78-4ad2-82e9-23ec78fca1e8",
+      "dep": "VTSP",
+      "arr": "VTBD",
+      "start": "1400",
+      "off": "1420",
+      "on": "1600",
+      "stop": "1605",
+      "pf": "PK",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "2:05",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

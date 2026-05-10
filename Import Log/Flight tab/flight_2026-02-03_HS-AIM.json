@@ -1,0 +1,72 @@
+{
+  "date": "2026-02-03",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "KK",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "d69ff974-d825-4d51-9ab4-6242b30d5396",
+      "dep": "VTCT",
+      "arr": "VTCL",
+      "start": "0950",
+      "off": "1015",
+      "on": "1105",
+      "stop": "1115",
+      "pf": "PT",
+      "pm": "KK",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:25",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    },
+    {
+      "id": "d878662b-8b6f-4550-987b-a3c2b7cf6c86",
+      "dep": "VTCL",
+      "arr": "VTCL",
+      "start": "1445",
+      "off": "1500",
+      "on": "1700",
+      "stop": "1710",
+      "pf": "PT",
+      "pm": "KK",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0225",
+      "nightTime": "",
+      "remarks": "FLTCK LOC RWY36 VTCL"
+    },
+    {
+      "id": "6a9ec356-6272-453a-9e53-35d0a755d026",
+      "dep": "VTCL",
+      "arr": "VTBD",
+      "start": "1750",
+      "off": "1810",
+      "on": "1925",
+      "stop": "1940",
+      "pf": "PT",
+      "pm": "KK",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": true,
+      "ifrTime": "1:50",
+      "vfrTime": "",
+      "nightTime": "0150",
+      "remarks": ""
+    }
+  ]
+}

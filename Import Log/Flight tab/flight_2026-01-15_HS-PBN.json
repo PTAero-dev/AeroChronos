@@ -1,0 +1,30 @@
+{
+  "date": "2026-01-15",
+  "ac": "HS-PBN",
+  "crew": [
+    "PT",
+    "KB",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "b4dd6c54-d58f-4111-a17e-5cf1693559e8",
+      "dep": "VTSB",
+      "arr": "VTBD",
+      "start": "1335",
+      "off": "1400",
+      "on": "1545",
+      "stop": "1545",
+      "pf": "KB",
+      "pm": "PT",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "2:10",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

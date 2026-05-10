@@ -1,0 +1,52 @@
+{
+  "date": "2026-02-02",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "KK",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "27bf7e53-faf2-45dd-84ae-c88184fe2ed2",
+      "dep": "VTBD",
+      "arr": "VTCT",
+      "start": "0930",
+      "off": "1000",
+      "on": "1140",
+      "stop": "1145",
+      "pf": "KK",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "2:15",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    },
+    {
+      "id": "c7b68491-2cfb-44de-98af-004814104e8d",
+      "dep": "VTCT",
+      "arr": "VTCT",
+      "start": "1500",
+      "off": "1515",
+      "on": "1635",
+      "stop": "1700",
+      "pf": "KK",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0200",
+      "nightTime": "",
+      "remarks": "FLTCK VOR/DME CTR, GCP CTR"
+    }
+  ]
+}

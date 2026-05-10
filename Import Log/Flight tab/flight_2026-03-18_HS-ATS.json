@@ -1,0 +1,72 @@
+{
+  "date": "2026-03-18",
+  "ac": "HS-ATS",
+  "crew": [
+    "PT",
+    "JP",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "1e6cb5de-ec7c-4ce1-8ad8-cf13394252af",
+      "dep": "VTCL",
+      "arr": "VTCN",
+      "start": "1250",
+      "off": "1305",
+      "on": "1340",
+      "stop": "1350",
+      "pf": "JP",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "1:00",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    },
+    {
+      "id": "64033e19-d455-48fc-af19-8b848798488d",
+      "dep": "VTCN",
+      "arr": "VTCN",
+      "start": "1450",
+      "off": "1455",
+      "on": "1535",
+      "stop": "1545",
+      "pf": "PT",
+      "pm": "JP",
+      "dual": "",
+      "ip": "",
+      "condition": "O",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:00",
+      "vfrTime": "0055",
+      "nightTime": "",
+      "remarks": "FLTCK PAPI RWY20 VTCN"
+    },
+    {
+      "id": "67503ce9-67fd-4572-9147-30b62d27a9a8",
+      "dep": "VTCN",
+      "arr": "VTCL",
+      "start": "1640",
+      "off": "1655",
+      "on": "1725",
+      "stop": "1730",
+      "pf": "JP",
+      "pm": "PT",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "0:50",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

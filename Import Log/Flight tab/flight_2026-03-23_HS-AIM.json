@@ -1,0 +1,32 @@
+{
+  "date": "2026-03-23",
+  "ac": "HS-AIM",
+  "crew": [
+    "PT",
+    "PK",
+    "",
+    ""
+  ],
+  "legs": [
+    {
+      "id": "ad5bf500-b21c-438c-b1b5-60f455223405",
+      "dep": "VTBD",
+      "arr": "VTSP",
+      "start": "0910",
+      "off": "0935",
+      "on": "1130",
+      "stop": "1140",
+      "pf": "PT",
+      "pm": "PK",
+      "dual": "",
+      "ip": "",
+      "condition": "N",
+      "landingCount": 1,
+      "isNight": false,
+      "ifrTime": "2:30",
+      "vfrTime": "",
+      "nightTime": "",
+      "remarks": ""
+    }
+  ]
+}

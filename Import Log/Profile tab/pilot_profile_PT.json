@@ -1,0 +1,22 @@
+{
+  "pilotName": "PT",
+  "recordDate": "2025-12-31",
+  "prevTotalHours": 223565,
+  "prevPicHours": 107220,
+  "prevSicHours": 116345,
+  "prevMultiEngineHours": 202565,
+  "prevSingleEngineHours": 21000,
+  "prevNightHours": 7215,
+  "prevIfrHours": 155260,
+  "prevDualHours": 10475,
+  "prevInstructorHours": 0,
+  "prevDayLandings": 2331,
+  "prevNightLandings": 96,
+  "prevB300Hours": 42795,
+  "prevB200Hours": 159770,
+  "prevOtherHours": 21000,
+  "prevFltckHoursCaat": 31970,
+  "prevIfpHoursCaat": 485,
+  "prevFltckHoursAbroad": 6225,
+  "prevIfpHoursAbroad": 1215
+}
