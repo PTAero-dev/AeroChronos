@@ -104,6 +104,23 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, user,
                     FIVP EXP.
                 </button>
                 <button
+                    className={`tab-btn ${activeTab === 'simulator' ? 'active' : ''}`}
+                    onClick={() => onTabChange('simulator')}
+                    style={{
+                        flex: '0 0 auto',
+                        background: activeTab === 'simulator' ? '#a78bfa' : 'transparent',
+                        color: activeTab === 'simulator' ? '#0f172a' : 'var(--text-muted)',
+                        border: '1px solid #a78bfa',
+                        padding: '10px 12px',
+                        borderRadius: '6px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    🖥️ SIM
+                </button>
+                <button
                     className={`tab-btn ${activeTab === 'calculator' ? 'active' : ''}`}
                     onClick={() => onTabChange('calculator')}
                     style={{

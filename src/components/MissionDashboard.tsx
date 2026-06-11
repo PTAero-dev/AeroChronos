@@ -13,9 +13,10 @@ interface MissionDashboardProps {
     onSave?: () => void;
     onReset?: () => void;
     onNavigateToFDP?: () => void;
+    isSimulator?: boolean;
 }
 
-const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, onSave, onReset, onNavigateToFDP }) => {
+const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, onSave, onReset, onNavigateToFDP, isSimulator }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Export handler
@@ -61,7 +62,7 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
         data.legs.forEach(l => {
             // Strict checks: Inputs must be valid and in sequence
             const startValid = isValidTimeRaw(l.start);
-            const stopValid = isSeqValid(l.stop, l.start);
+            const stopValid = isSimulator ? isSeqValid(l.stop, l.start) : isSeqValid(l.stop, l.on);
 
             // Calc BLK
             const b = (startValid && stopValid) ? calculateDiffMinsStrict(l.start, l.stop) : 0;
@@ -77,9 +78,14 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
             if (l.condition === 'N/O') cNO += b;
 
             // Flt
-            const offValid = isSeqValid(l.off, l.start);
-            const onValid = isSeqValid(l.on, l.off);
-            const f = (offValid && onValid) ? calculateDiffMinsStrict(l.off, l.on) : 0;
+            let f = 0;
+            if (isSimulator) {
+                f = b;
+            } else {
+                const offValid = isSeqValid(l.off, l.start);
+                const onValid = isSeqValid(l.on, l.off);
+                f = (offValid && onValid) ? calculateDiffMinsStrict(l.off, l.on) : 0;
+            }
             flt += f;
         });
 
@@ -187,20 +193,20 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
                 background: '#1e293b',
                 borderRadius: '8px',
                 padding: '16px',
-                borderLeft: '4px solid #38bdf8', /* Cyan Accent */
+                borderLeft: `4px solid ${isSimulator ? '#a78bfa' : '#38bdf8'}`,
                 marginBottom: '16px',
                 boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
             }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                    <h2 style={{ color: '#38bdf8', margin: 0, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        MISSION DASHBOARD
+                    <h2 style={{ color: isSimulator ? '#a78bfa' : '#38bdf8', margin: 0, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                        {isSimulator ? '🖥️ SIMULATOR DASHBOARD' : 'MISSION DASHBOARD'}
                     </h2>
                     <div style={{ display: 'flex', gap: '8px' }}>
                         <button
                             onClick={handleExport}
                             style={{
-                                background: '#38bdf8', /* Cyan for Export */
-                                color: '#0f172a', /* Dark text on bright cyan */
+                                background: isSimulator ? '#a78bfa' : '#38bdf8',
+                                color: '#0f172a',
                                 border: 'none',
                                 borderRadius: '6px',
                                 padding: '8px 12px',
@@ -272,16 +278,37 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
                     </div>
                     <div>
                         <label style={labelStyle}>AIRCRAFT</label>
-                        <select
-                            value={data.ac}
-                            onChange={(e) => handleInputChange('ac', e.target.value)}
-                            style={inputStyle}
-                        >
-                            <option value="HS-AIM">HS-AIM</option>
-                            <option value="HS-PBN">HS-PBN</option>
-                            <option value="HS-DCF">HS-DCF</option>
-                            <option value="HS-ATS">HS-ATS</option>
-                        </select>
+                        {isSimulator ? (
+                            <input
+                                type="text"
+                                value={data.ac}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    // Make a guess for B300 vs B200 based on standard naming (e.g. 136 or B300)
+                                    // but keep fstdType updatable via SimulatorView dropdown
+                                    let type = data.fstdType;
+                                    if (val.includes('136') || val.toUpperCase().includes('B300')) {
+                                        type = 'B300';
+                                    } else if (val.includes('129') || val.includes('229') || val.toUpperCase().includes('B200')) {
+                                        type = 'B200';
+                                    }
+                                    updateData({ ...data, ac: val, fstdType: type });
+                                }}
+                                style={inputStyle}
+                                placeholder="e.g. FSTD-136"
+                            />
+                        ) : (
+                            <select
+                                value={data.ac}
+                                onChange={(e) => handleInputChange('ac', e.target.value)}
+                                style={inputStyle}
+                            >
+                                <option value="HS-AIM">HS-AIM</option>
+                                <option value="HS-PBN">HS-PBN</option>
+                                <option value="HS-DCF">HS-DCF</option>
+                                <option value="HS-ATS">HS-ATS</option>
+                            </select>
+                        )}
                     </div>
                 </div>
 
@@ -324,19 +351,20 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
                         onChange={handleLegChange}
                         onBatchUpdate={handleLegBatchUpdate}
                         onDelete={deleteLeg}
+                        isSimulator={isSimulator}
                     />
                 ))}
             </div>
 
             {/* FDP STATUS BANNER - MOVED BOTTOM */}
-            <FDPStatusBanner legs={data.legs} aircraftReg={data.ac} />
+            {!isSimulator && <FDPStatusBanner legs={data.legs} aircraftReg={data.ac} />}
 
             {/* ADD BTN */}
             <button
                 onClick={addLeg}
                 style={{
                     width: '100%',
-                    background: '#38bdf8',
+                    background: isSimulator ? '#a78bfa' : '#38bdf8',
                     color: '#0f172a',
                     fontWeight: 'bold',
                     padding: '14px',
@@ -344,7 +372,7 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
                     marginTop: '20px',
                     fontSize: '1rem',
                     textTransform: 'uppercase',
-                    boxShadow: '0 0 15px rgba(56, 189, 248, 0.4)'
+                    boxShadow: `0 0 15px ${isSimulator ? 'rgba(167, 139, 250, 0.4)' : 'rgba(56, 189, 248, 0.4)'}`
                 }}
             >
                 + ADD LEG
@@ -393,7 +421,7 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
                 />
 
                 {/* CHECK FDP BUTTON */}
-                {onNavigateToFDP && (
+                {!isSimulator && onNavigateToFDP && (
                     <button
                         onClick={onNavigateToFDP}
                         style={{
@@ -416,6 +444,32 @@ const MissionDashboard: React.FC<MissionDashboardProps> = ({ data, updateData, o
                         }}
                     >
                         ⏱️ Check FDP & Duty
+                    </button>
+                )}
+
+                {isSimulator && onSave && (
+                    <button
+                        onClick={onSave}
+                        style={{
+                            width: '100%',
+                            marginTop: '24px',
+                            background: '#a78bfa', // Violet accent
+                            color: '#0f172a',
+                            fontWeight: 'bold',
+                            padding: '14px',
+                            borderRadius: '8px',
+                            fontSize: '1rem',
+                            textTransform: 'uppercase',
+                            border: 'none',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 10px rgba(167, 139, 250, 0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px'
+                        }}
+                    >
+                        💾 Save Simulator Session
                     </button>
                 )}
 

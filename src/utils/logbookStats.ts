@@ -117,7 +117,7 @@ export function getMonthlyStats(
     entries: LogbookEntry[],
     month: string // "2026-01"
 ): MonthlyStats {
-    const filtered = entries.filter(e => e.date.startsWith(month));
+    const filtered = entries.filter(e => !e.isSimulator && e.date.startsWith(month));
 
     const byAircraft: Record<string, number> = {};
     let totalHours = 0;
@@ -170,6 +170,7 @@ export function getOverallStats(entries: LogbookEntry[], userInitials: string = 
     }
 
     entries.forEach(entry => {
+        if (entry.isSimulator) return;
         // For PIC/SIC, only count legs where user was actually flying
         entry.legs.forEach(leg => {
             if (leg.start && leg.stop) {
@@ -236,7 +237,7 @@ export function getDateRangeStats(
     startDate: string,
     endDate: string
 ): DateRangeStats {
-    const filtered = entries.filter(e => e.date >= startDate && e.date <= endDate);
+    const filtered = entries.filter(e => !e.isSimulator && e.date >= startDate && e.date <= endDate);
 
     const byAircraft: Record<string, number> = {};
     let totalHours = 0;

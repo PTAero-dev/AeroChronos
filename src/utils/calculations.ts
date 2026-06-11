@@ -12,23 +12,25 @@ export const validateAndFormatTime = (val: string): TimeResult => {
 // Helper for minutes
 export const timeToMins = (t: string): number => {
     if (!t || t.indexOf(':') < 0) return 0; // standard format
-    const p = t.split(':');
-    return parseInt(p[0]) * 60 + parseInt(p[1]);
+    const clean = t.replace(/,/g, '');
+    const p = clean.split(':');
+    return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
 };
 
 // Raw 4-digit to minutes
 export const rawToMins = (t: string): number => {
     if (!t) return 0;
+    const clean = t.replace(/,/g, '');
     // If it contains a colon, it's already formatted (e.g. "1:35" or "0:45")
-    if (t.includes(':')) {
-        const p = t.split(':');
+    if (clean.includes(':')) {
+        const p = clean.split(':');
         return (parseInt(p[0], 10) || 0) * 60 + (parseInt(p[1], 10) || 0);
     }
     // Otherwise it's raw digits (e.g. "1235")
-    const clean = t.replace(/\D/g, '');
-    if (clean.length < 4) return 0;
-    const hh = parseInt(clean.slice(0, 2), 10);
-    const mm = parseInt(clean.slice(2, 4), 10);
+    const cleanDigits = clean.replace(/\D/g, '');
+    if (cleanDigits.length < 4) return 0;
+    const hh = parseInt(cleanDigits.slice(0, 2), 10);
+    const mm = parseInt(cleanDigits.slice(2, 4), 10);
     return hh * 60 + mm;
 };
 
@@ -46,7 +48,7 @@ export const isSeqValid = (current: string, prev: string): boolean => {
 export const minsToTime = (m: number): string => {
     const h = Math.floor(m / 60);
     const n = m % 60;
-    return `${h.toString()}:${n.toString().padStart(2, '0')}`;
+    return `${h.toLocaleString('en-US')}:${n.toString().padStart(2, '0')}`;
 };
 
 // Basic 4-digit validation (Raw)

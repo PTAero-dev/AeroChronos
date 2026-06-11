@@ -37,6 +37,9 @@ export function exportLogbookToCSV(entries: LogbookEntry[], userInitials: string
         'CO-PILOT TIME',
         'DUAL TIME',
         'INSTRUCTOR TIME',
+        'FSTD DATE',
+        'FSTD TYPE',
+        'FSTD TIME',
         'REMARKS'
     ];
 
@@ -119,29 +122,63 @@ export function exportLogbookToCSV(entries: LogbookEntry[], userInitials: string
             const dayLandings = (!leg.isNight && leg.landingCount > 0) ? leg.landingCount : 0;
             const nightLandings = (leg.isNight && leg.landingCount > 0) ? leg.landingCount : 0;
 
-            rows.push([
-                entry.date,
-                leg.dep || '',
-                leg.start ? formatRawTime(leg.start) : '',
-                leg.arr || '',
-                leg.stop ? formatRawTime(leg.stop) : '',
-                entry.aircraftModel,
-                entry.ac,
-                seTime,
-                meTime,
-                multiCrewTimeStr,
-                minsToTime(blockTime),
-                picName,
-                dayLandings.toString(),
-                nightLandings.toString(),
-                minsToTime(nightTime),
-                minsToTime(ifrTime),
-                minsToTime(picTime),
-                minsToTime(sicTime),
-                minsToTime(dualTime),
-                minsToTime(instructorTime),
-                leg.remarks || ''
-            ]);
+            const formattedDate = formatDateToDMY(entry.date);
+
+            if (entry.isSimulator) {
+                rows.push([
+                    '', // DATE
+                    '', // DEPARTURE
+                    '', // DEP TIME
+                    '', // ARRIVAL
+                    '', // ARR TIME
+                    '', // AIRCRAFT MODEL
+                    '', // REGISTRATION
+                    '', // SE
+                    '', // ME
+                    '', // MULTI-CREW TIME
+                    '', // TOTAL TIME OF FLIGHT
+                    '', // NAME(S) PIC
+                    '', // LANDINGS DAY
+                    '', // LANDINGS NIGHT
+                    '', // NIGHT TIME
+                    '', // IFR TIME
+                    '', // PIC TIME
+                    '', // CO-PILOT TIME
+                    '', // DUAL TIME
+                    '', // INSTRUCTOR TIME
+                    formattedDate, // FSTD DATE
+                    entry.aircraftModel, // FSTD TYPE
+                    minsToTime(blockTime), // FSTD TIME
+                    leg.remarks || '' // REMARKS
+                ]);
+            } else {
+                rows.push([
+                    formattedDate,
+                    leg.dep || '',
+                    leg.start ? formatRawTime(leg.start) : '',
+                    leg.arr || '',
+                    leg.stop ? formatRawTime(leg.stop) : '',
+                    entry.aircraftModel,
+                    entry.ac,
+                    seTime,
+                    meTime,
+                    multiCrewTimeStr,
+                    minsToTime(blockTime),
+                    picName,
+                    dayLandings.toString(),
+                    nightLandings.toString(),
+                    minsToTime(nightTime),
+                    minsToTime(ifrTime),
+                    minsToTime(picTime),
+                    minsToTime(sicTime),
+                    minsToTime(dualTime),
+                    minsToTime(instructorTime),
+                    '', // FSTD DATE
+                    '', // FSTD TYPE
+                    '', // FSTD TIME
+                    leg.remarks || '' // REMARKS
+                ]);
+            }
         });
     });
 
@@ -171,4 +208,17 @@ export function exportLogbookToCSV(entries: LogbookEntry[], userInitials: string
 function formatRawTime(raw: string): string {
     if (!raw || raw.length < 4) return raw;
     return `${raw.slice(0, 2)}:${raw.slice(2, 4)}`;
+}
+
+/**
+ * Format date from YYYY-MM-DD to d/mm/yy (e.g. 2025-08-20 -> 20/08/25)
+ */
+function formatDateToDMY(dateStr: string): string {
+    if (!dateStr || !dateStr.includes('-')) return dateStr;
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const year = parts[0].slice(-2);
+    const month = parts[1];
+    const day = parseInt(parts[2], 10).toString();
+    return `${day}/${month}/${year}`;
 }

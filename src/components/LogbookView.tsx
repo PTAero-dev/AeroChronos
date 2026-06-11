@@ -28,12 +28,21 @@ const LogbookView: React.FC<LogbookViewProps> = ({
 
     // Responsive check
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [logFilter, setLogFilter] = useState<'all' | 'flights' | 'simulators'>('all');
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    const filteredEntries = useMemo(() => {
+        return logbookEntries.filter(entry => {
+            if (logFilter === 'flights') return !entry.isSimulator;
+            if (logFilter === 'simulators') return !!entry.isSimulator;
+            return true;
+        });
+    }, [logbookEntries, logFilter]);
 
     // Calculate current mission totals
     const missionSummary = useMemo(() => {
@@ -80,31 +89,42 @@ const LogbookView: React.FC<LogbookViewProps> = ({
         return calculateCumulativeHours(logbookEntries, today);
     }, [logbookEntries]);
 
-    // Calculate Flight Hours by Type (B300, B200, Others)
-    const flightHoursByType = useMemo(() => {
-        let b300 = profile?.prevB300Hours || 0;
-        let b200 = profile?.prevB200Hours || 0;
-        let others = profile?.prevOtherHours || 0;
+    // Calculate Flight & Sim Hours by Type (B300, B200, Others)
+    const hoursByType = useMemo(() => {
+        let b300Flight = profile?.prevB300Hours || 0;
+        let b200Flight = profile?.prevB200Hours || 0;
+        let othersFlight = profile?.prevOtherHours || 0;
 
-        const pilotInitials = profile?.pilotName?.toUpperCase();
+        let b300Sim = profile?.prevSimB300Hours || 0;
+        let b200Sim = profile?.prevSimB200Hours || 0;
 
-        if (pilotInitials) {
-            logbookEntries.forEach(entry => {
+        logbookEntries.forEach(entry => {
+            const legTotal = entry.totalBlock;
+            if (entry.isSimulator) {
+                if (entry.fstdType === 'B300') b300Sim += legTotal;
+                else if (entry.fstdType === 'B200') b200Sim += legTotal;
+            } else {
                 // Determine type
                 const ac = entry.ac.toUpperCase().replace(/[^A-Z]/g, ''); // Remove dashes
                 let type = 'OTHERS';
                 if (['HSAIM', 'HSPBN'].includes(ac)) type = 'B300';
                 else if (['HSATS', 'HSDCF'].includes(ac)) type = 'B200';
 
-                let legTotal = entry.totalBlock;
+                if (type === 'B300') b300Flight += legTotal;
+                else if (type === 'B200') b200Flight += legTotal;
+                else othersFlight += legTotal;
+            }
+        });
 
-                if (type === 'B300') b300 += legTotal;
-                else if (type === 'B200') b200 += legTotal;
-                else others += legTotal;
-            });
-        }
-
-        return { b300, b200, others };
+        return {
+            b300Flight,
+            b300Sim,
+            b300Total: b300Flight + b300Sim,
+            b200Flight,
+            b200Sim,
+            b200Total: b200Flight + b200Sim,
+            othersFlight
+        };
     }, [logbookEntries, profile]);
 
     // Styles
@@ -326,21 +346,43 @@ const LogbookView: React.FC<LogbookViewProps> = ({
             {/* FLIGHT HOURS BY AIRCRAFT TYPE */}
             <div style={{ ...cardStyle, borderLeft: '4px solid #8b5cf6' }}>
                 <div style={{ ...headerStyle, color: '#8b5cf6', borderLeftColor: '#8b5cf6' }}>
-                    Flight Hour on Aircraft Types
+                    Flight & Sim Hours on Aircraft Types
                 </div>
-                <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: '8px' }}>
-                    <div style={boxStyle}>
-                        <div style={{ ...valueStyle, color: '#38bdf8' }}>{minsToTime(flightHoursByType.b300)}</div>
+                <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: '10px' }}>
+                    
+                    {/* B300 Card */}
+                    <div style={{ ...boxStyle, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div style={{ ...valueStyle, color: '#8b5cf6', fontSize: '1.25rem' }}>{minsToTime(hoursByType.b300Flight)}</div>
+                        <div style={{ fontSize: '0.65rem', color: '#cbd5e1' }}>
+                            ✈️ Flt: {minsToTime(hoursByType.b300Flight)}
+                        </div>
+                        <div style={{ fontSize: '0.65rem', color: '#a78bfa' }}>
+                            🖥️ Sim: {minsToTime(hoursByType.b300Sim)}
+                        </div>
                         <div style={labelStyle}>B300</div>
                     </div>
-                    <div style={boxStyle}>
-                        <div style={{ ...valueStyle, color: '#10b981' }}>{minsToTime(flightHoursByType.b200)}</div>
+
+                    {/* B200 Card */}
+                    <div style={{ ...boxStyle, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div style={{ ...valueStyle, color: '#8b5cf6', fontSize: '1.25rem' }}>{minsToTime(hoursByType.b200Flight)}</div>
+                        <div style={{ fontSize: '0.65rem', color: '#cbd5e1' }}>
+                            ✈️ Flt: {minsToTime(hoursByType.b200Flight)}
+                        </div>
+                        <div style={{ fontSize: '0.65rem', color: '#a78bfa' }}>
+                            🖥️ Sim: {minsToTime(hoursByType.b200Sim)}
+                        </div>
                         <div style={labelStyle}>B200</div>
                     </div>
-                    <div style={boxStyle}>
-                        <div style={{ ...valueStyle, color: '#f59e0b' }}>{minsToTime(flightHoursByType.others)}</div>
+
+                    {/* Others Card */}
+                    <div style={{ ...boxStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <div style={{ ...valueStyle, color: '#f59e0b', fontSize: '1.25rem' }}>{minsToTime(hoursByType.othersFlight)}</div>
+                        <div style={{ fontSize: '0.65rem', color: '#64748b', margin: '4px 0' }}>
+                            No simulator data
+                        </div>
                         <div style={labelStyle}>Others</div>
                     </div>
+
                 </div>
             </div>
 
@@ -469,7 +511,7 @@ const LogbookView: React.FC<LogbookViewProps> = ({
             <div style={{ ...cardStyle, borderLeft: '4px solid #10b981' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                     <div style={{ ...headerStyle, color: '#10b981', borderLeftColor: '#10b981', marginBottom: 0 }}>
-                        Logbook History ({logbookEntries.length} entries)
+                        Logbook History ({filteredEntries.length} shown)
                     </div>
                     {logbookEntries.length > 0 && (
                         <button
@@ -490,13 +532,62 @@ const LogbookView: React.FC<LogbookViewProps> = ({
                     )}
                 </div>
 
-                {logbookEntries.length === 0 ? (
+                {/* Filter buttons */}
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                    <button
+                        onClick={() => setLogFilter('all')}
+                        style={{
+                            padding: '6px 12px',
+                            background: logFilter === 'all' ? '#10b981' : '#020617',
+                            color: logFilter === 'all' ? '#fff' : '#94a3b8',
+                            border: '1px solid ' + (logFilter === 'all' ? '#10b981' : '#334155'),
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.8rem',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        All ({logbookEntries.length})
+                    </button>
+                    <button
+                        onClick={() => setLogFilter('flights')}
+                        style={{
+                            padding: '6px 12px',
+                            background: logFilter === 'flights' ? '#38bdf8' : '#020617',
+                            color: logFilter === 'flights' ? '#fff' : '#94a3b8',
+                            border: '1px solid ' + (logFilter === 'flights' ? '#38bdf8' : '#334155'),
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.8rem',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        ✈️ Flights ({logbookEntries.filter(e => !e.isSimulator).length})
+                    </button>
+                    <button
+                        onClick={() => setLogFilter('simulators')}
+                        style={{
+                            padding: '6px 12px',
+                            background: logFilter === 'simulators' ? '#a78bfa' : '#020617',
+                            color: logFilter === 'simulators' ? '#fff' : '#94a3b8',
+                            border: '1px solid ' + (logFilter === 'simulators' ? '#a78bfa' : '#334155'),
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.8rem',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        🖥️ Simulators ({logbookEntries.filter(e => e.isSimulator).length})
+                    </button>
+                </div>
+
+                {filteredEntries.length === 0 ? (
                     <div style={{ textAlign: 'center', color: '#64748b', padding: '20px' }}>
-                        No entries yet. Save your first mission above!
+                        No entries found for the selected filter.
                     </div>
                 ) : (
                     <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                        {logbookEntries
+                        {filteredEntries
                             .sort((a, b) => b.date.localeCompare(a.date)) // newest first
                             .map(entry => (
                                 <div
@@ -506,14 +597,17 @@ const LogbookView: React.FC<LogbookViewProps> = ({
                                         borderRadius: '8px',
                                         padding: '12px',
                                         marginBottom: '8px',
-                                        border: '1px solid #334155'
+                                        border: `1px solid ${entry.isSimulator ? '#a78bfa' : '#334155'}`
                                     }}
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                         <div>
                                             <div style={{ fontWeight: 'bold', color: '#fff' }}>{entry.date}</div>
                                             <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                                                {entry.ac} • {entry.legs.length} legs
+                                                {entry.isSimulator
+                                                    ? `${entry.ac} • ${entry.trainingType || 'SIM'} • ${entry.aircraftModel}`
+                                                    : `${entry.ac} • ${entry.legs.length} legs`
+                                                }
                                             </div>
                                         </div>
                                         <div style={{ display: 'flex', gap: '6px' }}>
@@ -547,73 +641,110 @@ const LogbookView: React.FC<LogbookViewProps> = ({
                                             </button>
                                         </div>
                                     </div>
-                                    <div style={{ overflowX: 'auto', paddingBottom: '4px' }}>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', fontSize: '0.7rem', marginBottom: '8px', textAlign: 'center', minWidth: '500px' }}>
+                                    {entry.isSimulator ? (
+                                        <div style={{
+                                            background: 'rgba(167, 139, 250, 0.05)',
+                                            border: '1px dashed rgba(167, 139, 250, 0.3)',
+                                            borderRadius: '6px',
+                                            padding: '10px 12px',
+                                            marginBottom: '8px',
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            gap: '16px',
+                                            fontSize: '0.75rem'
+                                        }}>
                                             <div>
-                                                <div style={{ color: '#64748b' }}>BLK</div>
-                                                <div style={{ color: '#10b981', fontWeight: 'bold' }}>{minsToTime(entry.totalBlock)}</div>
+                                                <span style={{ color: '#94a3b8' }}>FSTD Date: </span>
+                                                <span style={{ color: '#fff', fontWeight: 'bold' }}>{entry.date}</span>
                                             </div>
                                             <div>
-                                                <div style={{ color: '#64748b' }}>PIC</div>
-                                                <div style={{ color: '#38bdf8', fontWeight: 'bold' }}>
-                                                    {minsToTime(entry.picTime)}
-                                                </div>
+                                                <span style={{ color: '#94a3b8' }}>FSTD Type: </span>
+                                                <span style={{ color: '#a78bfa', fontWeight: 'bold' }}>{entry.fstdType || entry.aircraftModel}</span>
                                             </div>
                                             <div>
-                                                <div style={{ color: '#64748b' }}>SIC</div>
-                                                <div style={{ color: '#f59e0b', fontWeight: 'bold' }}>
-                                                    {minsToTime(entry.sicTime)}
-                                                </div>
+                                                <span style={{ color: '#94a3b8' }}>Device ID: </span>
+                                                <span style={{ color: '#fff' }}>{entry.ac}</span>
                                             </div>
                                             <div>
-                                                <div style={{ color: '#64748b' }}>NIGHT</div>
-                                                <div style={{ color: '#a78bfa', fontWeight: 'bold' }}>{minsToTime(entry.totalNight)}</div>
+                                                <span style={{ color: '#94a3b8' }}>Total Session Time: </span>
+                                                <span style={{ color: '#10b981', fontWeight: 'bold' }}>{minsToTime(entry.totalBlock)}</span>
                                             </div>
                                             <div>
-                                                <div style={{ color: '#64748b' }}>DUAL</div>
-                                                <div style={{ color: '#94a3b8', fontWeight: 'bold' }}>
-                                                    {minsToTime(
-                                                        entry.legs.reduce((total, leg) => {
-                                                            const userInitials = profile?.pilotName || 'PT';
-                                                            if (leg.dual && leg.dual.trim().toUpperCase() === userInitials.toUpperCase() && leg.start && leg.stop) {
-                                                                const start = rawToMins(leg.start);
-                                                                const stop = rawToMins(leg.stop);
-                                                                let block = stop - start;
-                                                                if (block < 0) block += 1440;
-                                                                return total + block;
-                                                            }
-                                                            return total;
-                                                        }, 0)
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div style={{ color: '#64748b' }}>IP</div>
-                                                <div style={{ color: '#94a3b8', fontWeight: 'bold' }}>
-                                                    {minsToTime(
-                                                        entry.legs.reduce((total, leg) => {
-                                                            const userInitials = profile?.pilotName || 'PT';
-                                                            if (leg.ip && leg.ip.trim().toUpperCase() === userInitials.toUpperCase() && leg.start && leg.stop) {
-                                                                const start = rawToMins(leg.start);
-                                                                const stop = rawToMins(leg.stop);
-                                                                let block = stop - start;
-                                                                if (block < 0) block += 1440;
-                                                                return total + block;
-                                                            }
-                                                            return total;
-                                                        }, 0)
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div style={{ color: '#64748b' }}>LDG</div>
-                                                <div style={{ color: '#fff', fontWeight: 'bold' }}>{entry.dayLandings + entry.nightLandings}</div>
+                                                <span style={{ color: '#94a3b8' }}>Training Type: </span>
+                                                <span style={{ color: '#fff' }}>{entry.trainingType || 'Recurrent'}</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
-                                        {entry.aircraftModel} • {entry.isMultiCrew ? 'Multi-Crew' : 'Single Pilot'} • {entry.fdpViolation ? '⚠️ FDP Violation' : '✓ FDP OK'}
-                                    </div>
+                                    ) : (
+                                        <>
+                                            <div style={{ overflowX: 'auto', paddingBottom: '4px' }}>
+                                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', fontSize: '0.7rem', marginBottom: '8px', textAlign: 'center', minWidth: '500px' }}>
+                                                    <div>
+                                                        <div style={{ color: '#64748b' }}>BLK</div>
+                                                        <div style={{ color: '#10b981', fontWeight: 'bold' }}>{minsToTime(entry.totalBlock)}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#64748b' }}>PIC</div>
+                                                        <div style={{ color: '#38bdf8', fontWeight: 'bold' }}>
+                                                            {minsToTime(entry.picTime)}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#64748b' }}>SIC</div>
+                                                        <div style={{ color: '#f59e0b', fontWeight: 'bold' }}>
+                                                            {minsToTime(entry.sicTime)}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#64748b' }}>NIGHT</div>
+                                                        <div style={{ color: '#a78bfa', fontWeight: 'bold' }}>{minsToTime(entry.totalNight)}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#64748b' }}>DUAL</div>
+                                                        <div style={{ color: '#94a3b8', fontWeight: 'bold' }}>
+                                                            {minsToTime(
+                                                                entry.legs.reduce((total, leg) => {
+                                                                    const userInitials = profile?.pilotName || 'PT';
+                                                                    if (leg.dual && leg.dual.trim().toUpperCase() === userInitials.toUpperCase() && leg.start && leg.stop) {
+                                                                        const start = rawToMins(leg.start);
+                                                                        const stop = rawToMins(leg.stop);
+                                                                        let block = stop - start;
+                                                                        if (block < 0) block += 1440;
+                                                                        return total + block;
+                                                                    }
+                                                                    return total;
+                                                                }, 0)
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#64748b' }}>IP</div>
+                                                        <div style={{ color: '#94a3b8', fontWeight: 'bold' }}>
+                                                            {minsToTime(
+                                                                entry.legs.reduce((total, leg) => {
+                                                                    const userInitials = profile?.pilotName || 'PT';
+                                                                    if (leg.ip && leg.ip.trim().toUpperCase() === userInitials.toUpperCase() && leg.start && leg.stop) {
+                                                                        const start = rawToMins(leg.start);
+                                                                        const stop = rawToMins(leg.stop);
+                                                                        let block = stop - start;
+                                                                        if (block < 0) block += 1440;
+                                                                        return total + block;
+                                                                    }
+                                                                    return total;
+                                                                }, 0)
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#64748b' }}>LDG</div>
+                                                        <div style={{ color: '#fff', fontWeight: 'bold' }}>{entry.dayLandings + entry.nightLandings}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
+                                                {entry.aircraftModel} • {entry.isMultiCrew ? 'Multi-Crew' : 'Single Pilot'} • {entry.fdpViolation ? '⚠️ FDP Violation' : '✓ FDP OK'}
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             ))}
                     </div>

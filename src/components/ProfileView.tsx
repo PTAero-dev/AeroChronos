@@ -31,7 +31,11 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile, onSave, onExportFull
         prevFltckHoursCaat: '',
         prevIfpHoursCaat: '',
         prevFltckHoursAbroad: '',
-        prevIfpHoursAbroad: ''
+        prevIfpHoursAbroad: '',
+        prevSimB300Hours: '',
+        prevSimB200Hours: '',
+        prevLpcDateB300: '',
+        prevLpcDateB200: ''
     });
     const [isLocked, setIsLocked] = useState(true); // Default to locked to protect data
 
@@ -60,7 +64,11 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile, onSave, onExportFull
                 prevFltckHoursCaat: minsToTime(profile.prevFltckHoursCaat || 0),
                 prevIfpHoursCaat: minsToTime(profile.prevIfpHoursCaat || 0),
                 prevFltckHoursAbroad: minsToTime(profile.prevFltckHoursAbroad || 0),
-                prevIfpHoursAbroad: minsToTime(profile.prevIfpHoursAbroad || 0)
+                prevIfpHoursAbroad: minsToTime(profile.prevIfpHoursAbroad || 0),
+                prevSimB300Hours: minsToTime(profile.prevSimB300Hours || 0),
+                prevSimB200Hours: minsToTime(profile.prevSimB200Hours || 0),
+                prevLpcDateB300: profile.prevLpcDateB300 || '',
+                prevLpcDateB200: profile.prevLpcDateB200 || ''
             });
         }
     }, [profile]);
@@ -117,7 +125,11 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile, onSave, onExportFull
             prevFltckHoursCaat: parseTime(inputs.prevFltckHoursCaat),
             prevIfpHoursCaat: parseTime(inputs.prevIfpHoursCaat),
             prevFltckHoursAbroad: parseTime(inputs.prevFltckHoursAbroad),
-            prevIfpHoursAbroad: parseTime(inputs.prevIfpHoursAbroad)
+            prevIfpHoursAbroad: parseTime(inputs.prevIfpHoursAbroad),
+            prevSimB300Hours: parseTime(inputs.prevSimB300Hours),
+            prevSimB200Hours: parseTime(inputs.prevSimB200Hours),
+            prevLpcDateB300: inputs.prevLpcDateB300,
+            prevLpcDateB200: inputs.prevLpcDateB200
         };
     };
 
@@ -547,6 +559,57 @@ const ProfileView: React.FC<ProfileViewProps> = ({ profile, onSave, onExportFull
                             style={inputStyle}
                             disabled={isLocked}
                         />
+                    </div>
+                </div>
+
+                {/* Simulator Experience & LPC Dates */}
+                <div style={{ margin: '20px 0', borderTop: '1px solid #334155', paddingTop: '20px' }}>
+                    <div style={{ ...headerStyle, fontSize: '1.05rem', color: '#a78bfa', borderBottom: 'none', paddingBottom: '0', marginBottom: '12px' }}>
+                        Simulator Experience & LPC Dates
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>Prev SIMULATOR B300</label>
+                            <input
+                                value={inputs.prevSimB300Hours}
+                                onChange={e => handleChange('prevSimB300Hours', e.target.value)}
+                                placeholder="HH:MM"
+                                style={inputStyle}
+                                disabled={isLocked}
+                            />
+                        </div>
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>Prev SIMULATOR B200</label>
+                            <input
+                                value={inputs.prevSimB200Hours}
+                                onChange={e => handleChange('prevSimB200Hours', e.target.value)}
+                                placeholder="HH:MM"
+                                style={inputStyle}
+                                disabled={isLocked}
+                            />
+                        </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>B300 LPC DATE</label>
+                            <input
+                                type="date"
+                                value={inputs.prevLpcDateB300}
+                                onChange={e => handleChange('prevLpcDateB300', e.target.value)}
+                                style={inputStyle}
+                                disabled={isLocked}
+                            />
+                        </div>
+                        <div style={inputGroupStyle}>
+                            <label style={labelStyle}>B200 LPC DATE</label>
+                            <input
+                                type="date"
+                                value={inputs.prevLpcDateB200}
+                                onChange={e => handleChange('prevLpcDateB200', e.target.value)}
+                                style={inputStyle}
+                                disabled={isLocked}
+                            />
+                        </div>
                     </div>
                 </div>
 

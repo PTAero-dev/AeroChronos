@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateDiff, getFDPLimit, timeToMins } from './calculations';
+import { calculateDiff, getFDPLimit, timeToMins, minsToTime } from './calculations';
 
 describe('Calculations', () => {
     it('calculates time difference correctly', () => {
@@ -47,6 +47,22 @@ describe('Calculations', () => {
             // 22:00 - 05:59, 1 sector -> 11h
             const t4 = timeToMins('01:00');
             expect(getFDPLimit(t4, 1, 'heavy')).toBe(11 * 60);
+        });
+    });
+
+    describe('Thousand Separation Commas', () => {
+        it('formats hours exceeding 1000 with commas', () => {
+            // 3908 hours and 10 minutes
+            expect(minsToTime(3908 * 60 + 10)).toBe('3,908:10');
+            // 2698 hours and 35 minutes
+            expect(minsToTime(2698 * 60 + 35)).toBe('2,698:35');
+            // < 1000 hours has no commas
+            expect(minsToTime(859 * 60 + 35)).toBe('859:35');
+        });
+
+        it('parses formatted times containing commas back to minutes', () => {
+            expect(timeToMins('3,908:10')).toBe(3908 * 60 + 10);
+            expect(timeToMins('2,698:35')).toBe(2698 * 60 + 35);
         });
     });
 });

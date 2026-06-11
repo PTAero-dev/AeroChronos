@@ -42,15 +42,15 @@ export function calculateCumulativeHours(
 
     // Calculate total BLOCK MINUTES for each period (not flight time)
     const calc7Days = entries
-        .filter(e => isWithinDays(e.date, 7))
+        .filter(e => !e.isSimulator && isWithinDays(e.date, 7))
         .reduce((sum, e) => sum + e.totalBlock, 0); // use totalBlock
 
     const calc28Days = entries
-        .filter(e => isWithinDays(e.date, 28))
+        .filter(e => !e.isSimulator && isWithinDays(e.date, 28))
         .reduce((sum, e) => sum + e.totalBlock, 0);
 
     const calc365Days = entries
-        .filter(e => isWithinDays(e.date, 365))
+        .filter(e => !e.isSimulator && isWithinDays(e.date, 365))
         .reduce((sum, e) => sum + e.totalBlock, 0);
 
     // Build result objects

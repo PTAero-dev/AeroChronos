@@ -29,9 +29,13 @@ export interface LogbookData {
     legs: Leg[];
     dutyOverrideEnabled?: boolean;
     dutyOverrideTime?: string; // HHMM
+    isSimulator?: boolean;
+    fstdType?: 'B300' | 'B200';
+    fstdDeviceId?: string;
+    trainingType?: 'LPC' | 'Recurrent' | 'Initial' | 'Other';
 }
 
-export type Tab = 'mission' | 'duty' | 'logbook' | 'fltck' | 'profile' | 'calculator';
+export type Tab = 'mission' | 'duty' | 'logbook' | 'fltck' | 'profile' | 'calculator' | 'simulator';
 
 // NAVAID station experience record
 export interface NavaidRecord {
@@ -104,6 +108,10 @@ export interface PilotProfile {
     // FIVP Experience - Abroad (International)
     prevFltckHoursAbroad?: number;
     prevIfpHoursAbroad?: number;
+    prevSimB300Hours?: number;
+    prevSimB200Hours?: number;
+    prevLpcDateB300?: string;
+    prevLpcDateB200?: string;
 }
 
 export interface LogbookEntry {
@@ -147,6 +155,12 @@ export interface LogbookEntry {
     // Aircraft details
     aircraftModel: string; // B300, B200, etc.
     isMultiEngine: boolean;
+
+    // Simulator details
+    isSimulator?: boolean;
+    fstdType?: 'B300' | 'B200';
+    fstdDeviceId?: string;
+    trainingType?: 'LPC' | 'Recurrent' | 'Initial' | 'Other';
 }
 
 export interface TimeResult {

@@ -150,6 +150,34 @@ const FltckExperienceView: React.FC<FltckExperienceViewProps> = ({
     const ifpHoursAbroad = (profile?.prevIfpHoursAbroad || 0) + ifpHoursFromLogbook.abroad;
     const totalIfpHours = ifpHoursCaat + ifpHoursAbroad;
 
+    // Simulator Hours (previous from profile + from logbook)
+    const simHours = useMemo(() => {
+        let b300Logged = 0;
+        let b200Logged = 0;
+
+        logbookEntries.forEach(entry => {
+            if (entry.isSimulator) {
+                if (entry.fstdType === 'B300') {
+                    b300Logged += entry.totalBlock;
+                } else if (entry.fstdType === 'B200') {
+                    b200Logged += entry.totalBlock;
+                }
+            }
+        });
+
+        const b300Prev = profile?.prevSimB300Hours || 0;
+        const b200Prev = profile?.prevSimB200Hours || 0;
+
+        return {
+            b300Logged,
+            b200Logged,
+            b300Prev,
+            b200Prev,
+            b300Total: b300Prev + b300Logged,
+            b200Total: b200Prev + b200Logged
+        };
+    }, [logbookEntries, profile]);
+
     // Date range query - calculate FLTCK and IFP hours separated by CAAT and Abroad
     const dateRangeHours = useMemo(() => {
         if (!dateRangeStart || !dateRangeEnd) return null;
@@ -719,6 +747,45 @@ const FltckExperienceView: React.FC<FltckExperienceViewProps> = ({
                             </div>
                             <div style={{ fontSize: '0.5rem', color: '#64748b', marginTop: '2px' }}>
                                 (Prev: {minsToTime(profile?.prevIfpHoursAbroad || 0)} + Log: {minsToTime(ifpHoursFromLogbook.abroad)})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Simulator Experience */}
+                <div style={{ marginBottom: '16px' }}>
+                    <div style={{ fontSize: '0.7rem', color: '#a78bfa', marginBottom: '8px', fontWeight: 'bold' }}>
+                        🖥️ SIMULATOR EXPERIENCE BY TYPE
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div style={{
+                            background: '#0f172a',
+                            borderRadius: '8px',
+                            padding: '10px',
+                            textAlign: 'center',
+                            border: '1px solid #a78bfa'
+                        }}>
+                            <div style={{ fontSize: '0.6rem', color: '#cbd5e1', marginBottom: '2px' }}>B300 SIMULATOR</div>
+                            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#a78bfa' }}>
+                                {minsToTime(simHours.b300Total)}
+                            </div>
+                            <div style={{ fontSize: '0.5rem', color: '#64748b', marginTop: '2px' }}>
+                                (Prev: {minsToTime(simHours.b300Prev)} + Log: {minsToTime(simHours.b300Logged)})
+                            </div>
+                        </div>
+                        <div style={{
+                            background: '#0f172a',
+                            borderRadius: '8px',
+                            padding: '10px',
+                            textAlign: 'center',
+                            border: '1px solid #a78bfa'
+                        }}>
+                            <div style={{ fontSize: '0.6rem', color: '#cbd5e1', marginBottom: '2px' }}>B200 SIMULATOR</div>
+                            <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#a78bfa' }}>
+                                {minsToTime(simHours.b200Total)}
+                            </div>
+                            <div style={{ fontSize: '0.5rem', color: '#64748b', marginTop: '2px' }}>
+                                (Prev: {minsToTime(simHours.b200Prev)} + Log: {minsToTime(simHours.b200Logged)})
                             </div>
                         </div>
                     </div>

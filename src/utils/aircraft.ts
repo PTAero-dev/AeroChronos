@@ -16,6 +16,13 @@ const AIRCRAFT_DATABASE: Record<string, AircraftConfig> = {
 };
 
 export function getAircraftConfig(registration: string): AircraftConfig {
+    const reg = registration.toUpperCase();
+    if (reg.includes('136') || reg.includes('B300') || reg.includes('AIM') || reg.includes('PBN')) {
+        return { model: 'B300', isMultiEngine: true, weightClass: 'heavy' };
+    }
+    if (reg.includes('229') || reg.includes('B200') || reg.includes('ATS') || reg.includes('DCF')) {
+        return { model: 'B200', isMultiEngine: true, weightClass: 'light' };
+    }
     return AIRCRAFT_DATABASE[registration] || {
         model: 'Unknown',
         isMultiEngine: false,

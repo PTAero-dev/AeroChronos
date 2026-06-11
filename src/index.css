@@ -100,6 +100,16 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
 }
 
+/* Prevent browser autofill from overriding dark background and light text */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 100px #020617 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff;
+}
+
 label {
   display: block;
   font-size: 0.75rem;

@@ -58,3 +58,15 @@ export const fetchCurrentMission = async (uid: string): Promise<LogbookData | un
 export const persistCurrentMission = async (uid: string, mission: LogbookData): Promise<void> => {
   await setDoc(doc(db, 'users', uid, 'data', 'currentMission'), mission);
 };
+
+// --- Simulator Mission Draft ---
+
+export const fetchSimMissionDraft = async (uid: string): Promise<LogbookData | undefined> => {
+  const snap = await getDoc(doc(db, 'users', uid, 'data', 'simMissionDraft'));
+  return snap.exists() ? (snap.data() as LogbookData) : undefined;
+};
+
+export const persistSimMissionDraft = async (uid: string, mission: LogbookData): Promise<void> => {
+  await setDoc(doc(db, 'users', uid, 'data', 'simMissionDraft'), mission);
+};
+

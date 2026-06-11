@@ -8,15 +8,17 @@ import ProfileView from './components/ProfileView';
 import LogbookView from './components/LogbookView';
 import TimeCalculatorView from './components/TimeCalculatorView';
 import FltckExperienceView from './components/FltckExperienceView';
+import SimulatorView from './components/SimulatorView';
 import type { Tab, LogbookData, LogbookEntry, PilotProfile, FltckExperience } from './types';
 import { calculateFDP } from './utils/fdp';
 import { rawToMins } from './utils/calculations';
 import { getAircraftConfig } from './utils/aircraft';
+import { calculateTypeRatingExpiry } from './utils/currencyTracking';
 import { onAuthChange, signOutUser } from './firebase/auth';
 import {
   fetchLogbookEntries, fetchProfile, fetchFltckExperience, fetchCurrentMission,
   saveLogbookEntry, removeLogbookEntry, persistProfile, persistFltckExperience,
-  persistCurrentMission, bulkImportEntries
+  persistCurrentMission, bulkImportEntries, fetchSimMissionDraft, persistSimMissionDraft
 } from './firebase/db';
 
 const DEFAULT_FLTCK: FltckExperience = {
@@ -49,6 +51,15 @@ const App: React.FC = () => {
     legs: [],
   });
   const [logbookEntries, setLogbookEntries] = useState<LogbookEntry[]>([]);
+  const [simLogbookData, setSimLogbookData] = useState<LogbookData>({
+    date: new Date().toISOString().split('T')[0],
+    ac: 'FSTD-136',
+    fstdType: 'B300',
+    trainingType: 'Recurrent',
+    crew: ['', '', '', ''],
+    legs: [],
+    isSimulator: true,
+  });
   const [profile, setProfile] = useState<PilotProfile | undefined>(undefined);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [fltckExperience, setFltckExperience] = useState<FltckExperience>(DEFAULT_FLTCK);
@@ -76,6 +87,15 @@ const App: React.FC = () => {
           crew: ['', '', '', ''],
           legs: [],
         });
+        setSimLogbookData({
+          date: new Date().toISOString().split('T')[0],
+          ac: 'FSTD-136',
+          fstdType: 'B300',
+          trainingType: 'Recurrent',
+          crew: ['', '', '', ''],
+          legs: [],
+          isSimulator: true,
+        });
       }
     });
     return unsub;
@@ -85,16 +105,30 @@ const App: React.FC = () => {
     setDataLoading(true);
     initialized.current = false;
     try {
-      const [entries, prof, fltck, mission] = await Promise.all([
+      const [entries, prof, fltck, mission, simMission] = await Promise.all([
         fetchLogbookEntries(uid),
         fetchProfile(uid),
         fetchFltckExperience(uid),
         fetchCurrentMission(uid),
+        fetchSimMissionDraft(uid),
       ]);
       setLogbookEntries(entries);
       if (prof) setProfile(prof);
       if (fltck) setFltckExperience(fltck);
       if (mission) setLogbookData(mission);
+      if (simMission) {
+        setSimLogbookData(simMission);
+      } else {
+        setSimLogbookData({
+          date: new Date().toISOString().split('T')[0],
+          ac: 'FSTD-136',
+          fstdType: 'B300',
+          trainingType: 'Recurrent',
+          crew: ['', '', '', ''],
+          legs: [],
+          isSimulator: true,
+        });
+      }
     } catch (e) {
       console.error('Failed to load data from Firestore', e);
     } finally {
@@ -112,6 +146,16 @@ const App: React.FC = () => {
     }, 1500);
   }, [logbookData, user]);
 
+  const simMissionDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // --- Auto-save current sim mission draft (debounced) ---
+  useEffect(() => {
+    if (!user || !initialized.current) return;
+    if (simMissionDebounce.current) clearTimeout(simMissionDebounce.current);
+    simMissionDebounce.current = setTimeout(() => {
+      persistSimMissionDraft(user.uid, simLogbookData).catch(console.error);
+    }, 1500);
+  }, [simLogbookData, user]);
+
   // --- Auto-save profile ---
   useEffect(() => {
     if (!user || !initialized.current || !profile) return;
@@ -125,14 +169,17 @@ const App: React.FC = () => {
   }, [fltckExperience, user]);
 
   // --- Save mission to logbook ---
-  const handleSaveToLogbook = async () => {
+  const handleSaveToLogbook = async (isSimParam: any = false) => {
     if (!user) return;
 
-    if (logbookData.legs.length === 0) {
-      alert('No flight legs to save. Please add legs in the FLIGHT tab.');
+    const isSim = isSimParam === true;
+    const currentDraft = isSim ? simLogbookData : logbookData;
+
+    if (currentDraft.legs.length === 0) {
+      alert(isSim ? 'No simulator legs to save.' : 'No flight legs to save. Please add legs.');
       return;
     }
-    const hasValidLeg = logbookData.legs.some(l => l.start && l.stop);
+    const hasValidLeg = currentDraft.legs.some(l => l.start && l.stop);
     if (!hasValidLeg) {
       alert('Please complete at least one leg with start and stop times.');
       return;
@@ -144,7 +191,7 @@ const App: React.FC = () => {
       return;
     }
 
-    const isCrew = logbookData.legs.some(l => {
+    const isCrew = currentDraft.legs.some(l => {
       const pf = l.pf?.trim()?.toUpperCase();
       const pm = l.pm?.trim()?.toUpperCase();
       const dual = l.dual?.trim()?.toUpperCase();
@@ -160,7 +207,7 @@ const App: React.FC = () => {
     let totalBlock = 0, totalFlight = 0, totalIFR = 0, totalVFR = 0, totalNight = 0;
     let picTime = 0, sicTime = 0, dayLandings = 0, nightLandings = 0;
 
-    logbookData.legs.forEach(leg => {
+    currentDraft.legs.forEach(leg => {
       if (leg.start && leg.stop) {
         const start = rawToMins(leg.start);
         const stop = rawToMins(leg.stop);
@@ -180,17 +227,19 @@ const App: React.FC = () => {
       }
     });
 
-    const hasMultiCrew = logbookData.legs.some(l => l.pf && l.pm);
-    const aircraftConfig = getAircraftConfig(logbookData.ac);
+    const hasMultiCrew = currentDraft.legs.some(l => l.pf && l.pm);
+    const aircraftConfig = isSim
+      ? { model: currentDraft.fstdType || 'B300', isMultiEngine: true, weightClass: (currentDraft.fstdType === 'B200' ? 'light' : 'heavy') as 'light' | 'heavy' }
+      : getAircraftConfig(currentDraft.ac);
     const weightClass = aircraftConfig.weightClass;
-    const firstLeg = logbookData.legs[0];
-    const lastLeg = logbookData.legs[logbookData.legs.length - 1];
+    const firstLeg = currentDraft.legs[0];
+    const lastLeg = currentDraft.legs[currentDraft.legs.length - 1];
 
     let fdpData = { reportTime: '', offDuty: '', actualFDP: 0, maxFDP: 0, fdpViolation: false };
-    if (firstLeg.start && lastLeg.stop) {
+    if (!isSim && firstLeg.start && lastLeg.stop) {
       const fdpResult = calculateFDP(
-        firstLeg.start, lastLeg.stop, logbookData.legs.length, weightClass, 'multi',
-        logbookData.dutyOverrideEnabled ? logbookData.dutyOverrideTime : undefined
+        firstLeg.start, lastLeg.stop, currentDraft.legs.length, weightClass, 'multi',
+        currentDraft.dutyOverrideEnabled ? currentDraft.dutyOverrideTime : undefined
       );
       if (fdpResult) {
         const reportMins = fdpResult.reportMins < 0 ? fdpResult.reportMins + 1440 : fdpResult.reportMins;
@@ -210,19 +259,31 @@ const App: React.FC = () => {
     const entryId = editingEntryId || (Date.now().toString() + Math.random().toString(36).substr(2, 9));
     const newEntry: LogbookEntry = {
       id: entryId,
-      date: logbookData.date,
-      ac: logbookData.ac,
-      crew: [...logbookData.crew],
-      legs: [...logbookData.legs],
-      totalBlock, totalFlight, totalIFR, totalVFR, totalNight,
+      date: currentDraft.date,
+      ac: currentDraft.ac,
+      crew: [...currentDraft.crew],
+      legs: [...currentDraft.legs],
+      totalBlock,
+      totalFlight: isSim ? 0 : totalFlight,
+      totalIFR: isSim ? 0 : totalIFR,
+      totalVFR: isSim ? 0 : totalVFR,
+      totalNight: isSim ? 0 : totalNight,
       ...fdpData,
       weightClass,
-      picTime, sicTime, dualTime: 0, instructorTime: 0,
-      dayLandings, nightLandings,
-      isSinglePilot: !hasMultiCrew,
-      isMultiCrew: hasMultiCrew,
+      picTime: isSim ? 0 : picTime,
+      sicTime: isSim ? 0 : sicTime,
+      dualTime: 0,
+      instructorTime: 0,
+      dayLandings: isSim ? 0 : dayLandings,
+      nightLandings: isSim ? 0 : nightLandings,
+      isSinglePilot: isSim ? false : !hasMultiCrew,
+      isMultiCrew: isSim ? false : hasMultiCrew,
       aircraftModel: aircraftConfig.model,
-      isMultiEngine: aircraftConfig.isMultiEngine,
+      isMultiEngine: isSim ? false : aircraftConfig.isMultiEngine,
+      isSimulator: isSim || !!currentDraft.isSimulator,
+      fstdType: isSim ? currentDraft.fstdType : undefined,
+      fstdDeviceId: isSim ? currentDraft.ac : undefined,
+      trainingType: isSim ? currentDraft.trainingType : undefined,
     };
 
     try {
@@ -239,15 +300,30 @@ const App: React.FC = () => {
       return;
     }
 
-    const clearedMission: LogbookData = {
-      date: new Date().toISOString().split('T')[0],
-      ac: logbookData.ac,
-      crew: ['', '', '', ''],
-      legs: [],
-    };
-    setLogbookData(clearedMission);
-    setActiveTab('logbook');
-    alert('Mission saved to logbook!');
+    if (isSim) {
+      const clearedSim: LogbookData = {
+        date: new Date().toISOString().split('T')[0],
+        ac: 'FSTD-136',
+        fstdType: 'B300',
+        trainingType: 'Recurrent',
+        crew: ['', '', '', ''],
+        legs: [],
+        isSimulator: true,
+      };
+      setSimLogbookData(clearedSim);
+      setActiveTab('logbook');
+      alert('Simulator session saved to logbook!');
+    } else {
+      const clearedMission: LogbookData = {
+        date: new Date().toISOString().split('T')[0],
+        ac: logbookData.ac,
+        crew: ['', '', '', ''],
+        legs: [],
+      };
+      setLogbookData(clearedMission);
+      setActiveTab('logbook');
+      alert('Mission saved to logbook!');
+    }
   };
 
   // --- Delete entry ---
@@ -266,23 +342,49 @@ const App: React.FC = () => {
 
   // --- Load entry for editing ---
   const handleLoadEntry = (entry: LogbookEntry) => {
-    setLogbookData({
-      date: entry.date,
-      ac: entry.ac,
-      crew: entry.crew as [string, string, string, string],
-      legs: entry.legs,
-    });
-    setEditingEntryId(entry.id);
-    setActiveTab('mission');
+    if (entry.isSimulator) {
+      setSimLogbookData({
+        date: entry.date,
+        ac: entry.ac,
+        crew: entry.crew as [string, string, string, string],
+        legs: entry.legs,
+        isSimulator: true,
+        fstdType: entry.fstdType,
+        trainingType: entry.trainingType,
+      });
+      setEditingEntryId(entry.id);
+      setActiveTab('simulator');
+    } else {
+      setLogbookData({
+        date: entry.date,
+        ac: entry.ac,
+        crew: entry.crew as [string, string, string, string],
+        legs: entry.legs,
+      });
+      setEditingEntryId(entry.id);
+      setActiveTab('mission');
+    }
   };
 
-  const handleReset = () => {
-    setLogbookData({
-      date: new Date().toISOString().split('T')[0],
-      ac: logbookData.ac,
-      crew: ['', '', '', ''],
-      legs: [],
-    });
+  const handleReset = (isSim: boolean = false) => {
+    if (isSim) {
+      setSimLogbookData({
+        date: new Date().toISOString().split('T')[0],
+        ac: 'FSTD-136',
+        fstdType: 'B300',
+        trainingType: 'Recurrent',
+        crew: ['', '', '', ''],
+        legs: [],
+        isSimulator: true,
+      });
+    } else {
+      setLogbookData({
+        date: new Date().toISOString().split('T')[0],
+        ac: logbookData.ac,
+        crew: ['', '', '', ''],
+        legs: [],
+      });
+    }
     setEditingEntryId(null);
   };
 
@@ -309,7 +411,7 @@ const App: React.FC = () => {
       exportDate: new Date().toISOString(),
       type: 'AERO_CHRONOS_FULL_BACKUP',
       version: '1.0',
-      data: { profile, logbookEntries, fltckExperience, currentMission: logbookData },
+      data: { profile, logbookEntries, fltckExperience, currentMission: logbookData, simMissionDraft: simLogbookData },
     };
     const blob = new Blob([JSON.stringify(fullData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -344,6 +446,10 @@ const App: React.FC = () => {
       if (data.currentMission) {
         await persistCurrentMission(user.uid, data.currentMission);
         setLogbookData(data.currentMission);
+      }
+      if (data.simMissionDraft) {
+        await persistSimMissionDraft(user.uid, data.simMissionDraft);
+        setSimLogbookData(data.simMissionDraft);
       }
       alert('✅ Full data restored to cloud successfully!');
     } catch (error) {
@@ -397,19 +503,98 @@ const App: React.FC = () => {
     );
   }
 
+  const b300Currency = calculateTypeRatingExpiry('B300', profile, logbookEntries);
+  const b200Currency = calculateTypeRatingExpiry('B200', profile, logbookEntries);
+
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab} user={user} onSignOut={signOutUser}>
+      {/* Type Rating Expiry Alert Banner */}
+      {(() => {
+        const alerts: { type: 'warning' | 'expired'; message: string }[] = [];
+        
+        if (b300Currency.status === 'warning') {
+          alerts.push({ type: 'warning', message: `⚠️ B300 Type Rating renewal is open! Expiry: ${b300Currency.expiryDate}` });
+        } else if (b300Currency.status === 'expired') {
+          alerts.push({ type: 'expired', message: `🚨 B300 Type Rating is EXPIRED / INVALID! Expiry: ${b300Currency.expiryDate}` });
+        }
+
+        if (b200Currency.status === 'warning') {
+          alerts.push({ type: 'warning', message: `⚠️ B200 Type Rating renewal is open! Expiry: ${b200Currency.expiryDate}` });
+        } else if (b200Currency.status === 'expired') {
+          alerts.push({ type: 'expired', message: `🚨 B200 Type Rating is EXPIRED / INVALID! Expiry: ${b200Currency.expiryDate}` });
+        }
+
+        if (alerts.length === 0) return null;
+
+        return (
+          <div style={{
+            maxWidth: '800px',
+            margin: '0 auto 16px auto',
+            padding: '0 16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px'
+          }}>
+            {alerts.map((alert, idx) => (
+              <div
+                key={idx}
+                style={{
+                  background: alert.type === 'expired' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                  border: `1px solid ${alert.type === 'expired' ? '#ef4444' : '#f59e0b'}`,
+                  borderRadius: '8px',
+                  padding: '12px 16px',
+                  color: alert.type === 'expired' ? '#fca5a5' : '#fde047',
+                  fontSize: '0.85rem',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}
+              >
+                <span>{alert.message}</span>
+                <button
+                  onClick={() => setActiveTab('simulator')}
+                  style={{
+                    background: 'transparent',
+                    border: `1px solid ${alert.type === 'expired' ? '#ef4444' : '#f59e0b'}`,
+                    color: alert.type === 'expired' ? '#ef4444' : '#f59e0b',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  View Sim
+                </button>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
+
       {activeTab === 'mission' && (
-        <MissionDashboard data={logbookData} updateData={setLogbookData} onSave={handleSaveToLogbook} onReset={handleReset} onNavigateToFDP={() => setActiveTab('duty')} />
+        <MissionDashboard data={logbookData} updateData={setLogbookData} onSave={() => handleSaveToLogbook(false)} onReset={handleReset} onNavigateToFDP={() => setActiveTab('duty')} />
+      )}
+      {activeTab === 'simulator' && (
+        <SimulatorView
+          data={simLogbookData}
+          updateData={setSimLogbookData}
+          onSave={() => handleSaveToLogbook(true)}
+          onReset={() => handleReset(true)}
+          logbookEntries={logbookEntries}
+          profile={profile}
+        />
       )}
       {activeTab === 'duty' && (
-        <FDPView data={logbookData} onUpdateData={setLogbookData} onSave={handleSaveToLogbook} />
+        <FDPView data={logbookData} onUpdateData={setLogbookData} onSave={() => handleSaveToLogbook(false)} />
       )}
       {activeTab === 'logbook' && (
         <LogbookView
           currentMission={logbookData}
           logbookEntries={logbookEntries}
-          onSaveToLogbook={handleSaveToLogbook}
+          onSaveToLogbook={() => handleSaveToLogbook(false)}
           onDeleteEntry={handleDeleteEntry}
           onLoadEntry={handleLoadEntry}
           onImportLogbook={handleImportLogbook}
