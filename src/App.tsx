@@ -281,10 +281,13 @@ const App: React.FC = () => {
       aircraftModel: aircraftConfig.model,
       isMultiEngine: isSim ? false : aircraftConfig.isMultiEngine,
       isSimulator: isSim || !!currentDraft.isSimulator,
-      fstdType: isSim ? currentDraft.fstdType : undefined,
-      fstdDeviceId: isSim ? currentDraft.ac : undefined,
-      trainingType: isSim ? currentDraft.trainingType : undefined,
     };
+
+    if (isSim) {
+      newEntry.fstdType = currentDraft.fstdType;
+      newEntry.fstdDeviceId = currentDraft.ac;
+      newEntry.trainingType = currentDraft.trainingType;
+    }
 
     try {
       await saveLogbookEntry(user.uid, newEntry);
